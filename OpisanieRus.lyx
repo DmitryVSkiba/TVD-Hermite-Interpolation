@@ -5,8 +5,8 @@
 \textclass article
 \use_default_options true
 \maintain_unincluded_children false
-\language english
-\language_package default
+\language russian
+\language_package babel
 \inputencoding auto
 \fontencoding global
 \font_roman default
@@ -25,6 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -55,7 +56,7 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\quotes_language english
+\quotes_language french
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -68,72 +69,436 @@
 
 \begin_body
 
-\begin_layout Standard
-Алгоритм расчета полинмов Эрмита с обеспечением монотонности согласно алгоритму
- изложенному 
+\begin_layout Section*
+Алгоритм расчета полинмов Эрмита с обеспечением монотонности 
 \end_layout
 
 \begin_layout Standard
-в работе Accurate Monotonicity Preserving Cubic Interpolation, J.
+Данный алгоритм предлагается реализовать согласно работы Accurate Monotonicity
+ Preserving Cubic Interpolation, J.
  M.
- Hyman, 
-\end_layout
-
-\begin_layout Standard
-Society of Industrial and Applied Mathematics Journal of Scientific and
- Statistical Computing, 4, No.
+ Hyman, Society of Industrial and Applied Mathematics Journal of Scientific
+ and Statistical Computing, 4, No.
  4, (December 1983) pp.
  645-654.( метод Fritsch-Butland) 
 \end_layout
 
-\begin_layout Standard
-1.
- Исходные данные для алгоритма.
+\begin_layout Section
+Исходные данные для алгоритма.
  
 \end_layout
 
-\begin_layout Standard
-Одномерный массив точек в котрорых интерполируется функция (в данном случае
- Ti) длиной N штук, нумерация начинается с 0, индекс последнего элемента
- массива N-1 
+\begin_layout Itemize
+Одномерный массив точек в которых интерполируется функция (в данном случае
+ 
+\begin_inset Formula $T_{i}$
+\end_inset
+
+) длиной N штук, нумерация начинается с 0, индекс последнего элемента массива
+ N-1 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 Одномерный массив значений функции в точках в данном случае массив значений
- открытия крана в % (Yi) длиной N штук, нумерация начинается с 0, индекс
- последнего элемента массива N-1 
+ открытия крана в % (
+\begin_inset Formula $Y_{i}$
+\end_inset
+
+) длиной N штук, нумерация начинается с 0, индекс последнего элемента массива
+ N-1 
+\end_layout
+
+\begin_layout Section
+Подготовительные операции.
 \end_layout
 
 \begin_layout Standard
-2.
- Подготовительные операции.
+Рассчитываются следующие массивы 
+\begin_inset Formula $h_{i}$
+\end_inset
+
+,
+\begin_inset Formula $\varDelta_{i}$
+\end_inset
+
+ длины N-1, нумерация начинается с 0, последний элемент массива имеет индекс
+ N-2 :
 \end_layout
 
 \begin_layout Standard
-Рассчитываются следующие массивы h_i,∆_i длины N-1, нумерация начинается
- с 0, последний элемент массива имеет индекс N-2 
+\begin_inset Formula 
+\[
+h_{i}:=T_{i+1}-T_{i};\thinspace\thinspace\thinspace\thinspace\varDelta_{i}=\frac{\left(Y_{i+1}-Y_{i}\right)}{h_{i}}
+\]
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-расчитываются дополнительные массивы значений для шагов по независимой переменно
-й длины N-2, нумерация начинается с 0, последний элемент массива имеет индекс
- N-3: ,
+Расчитываются дополнительные массивы значений для шагов по независимой переменно
+й 
+\begin_inset Formula $\left(w_{1_{i}},w_{2_{i}},H_{i}\right)$
+\end_inset
+
+длины N-2, нумерация начинается с 0, последний элемент массива имеет индекс
+ N-3: 
 \end_layout
 
 \begin_layout Standard
-3.
- Процедура ограничения производных для обеспечения монотонности.
+\begin_inset Formula 
+\[
+H_{i}:=\left(h_{i}+h_{i+1}\right);\thinspace\thinspace\thinspace\thinspace w_{1_{i}}:=\frac{\left(h_{i}+H_{i}\right)}{3H_{i}};\thinspace\thinspace\thinspace\thinspace w_{2_{i}}:=\frac{\left(h_{i+1}+H_{i}\right)}{3H_{i}}
+\]
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Процедура ограничения производных для обеспечения монотонности.
  
 \end_layout
 
 \begin_layout Standard
-По данным подготовительной операции находятся массивы и dmax , нумерация
- начинается с 0, длины N-2, последний элемент массива имеет индекс N-3 по
- следующим формулам: 
+По данным подготовительной операции находятся массивы 
+\begin_inset Formula $d_{max_{i}}$
+\end_inset
+
+и 
+\begin_inset Formula $d_{min_{i}}$
+\end_inset
+
+ , нумерация начинается с 0, длины N-2, последний элемент массива имеет
+ индекс N-3 по следующим формулам: 
 \end_layout
 
 \begin_layout Standard
-По данным этих массивов строится массив длины N-2 по формуле 
+\begin_inset Formula 
+\[
+d_{max_{i}}:=max\left(\left|\varDelta_{i}\right|,\left|\varDelta_{i+1}\right|\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+d_{min_{i}}:=min\left(\left|\varDelta_{i}\right|,\left|\varDelta_{i+1}\right|\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+По данным этих массивов строится массив 
+\begin_inset Formula $A_{i}$
+\end_inset
+
+, нумерация начинается с 0, длины N-2, последний элемент массива имеет индекс
+ N-3 по формуле:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{i}:=\frac{d_{min_{i}}d_{max_{i}}}{w_{1_{i}}\Delta_{i}+w_{2_{i}}\Delta_{i+1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+По результатам расчета данных масивов считается массив 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+, нумерация начинается с 0, длины N-2, последний элемент массива имеет индекс
+ N-3
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+d_{i}:=\begin{cases}
+A_{i} & \text{если }\varDelta_{\text{i}}\varDelta_{i+1}>0\\
+0 & \text{иначе}
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Расчет коэффициентов кусочно кубического сплайна Эрмита
+\end_layout
+
+\begin_layout Standard
+Расчитывается массив коэффициентов кубического сплайна 
+\begin_inset Formula $D_{i}$
+\end_inset
+
+ нумерация начинается с 0, длины N, последний элемент массива имеет индекс
+ N-1
+\end_layout
+
+\begin_layout Standard
+в диапазоне индексов i=1..N-2 
+\begin_inset Formula $D_{i}$
+\end_inset
+
+расчитываются по формуле:
+\begin_inset Formula 
+\[
+D_{i}:=d_{i-1},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $D_{0}$
+\end_inset
+
+расчитывается по формуле
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+D_{0}:=\begin{cases}
+\frac{\left(\left(2h_{0}+h_{1}\right)\varDelta_{0}-h_{0}\varDelta_{1}\right)}{h_{0}+h_{1}} & \text{если }\frac{\left(\left(2h_{0}+h_{1}\right)\varDelta_{0}-h_{0}\varDelta_{1}\right)}{h_{0}+h_{1}}\varDelta_{0}>0\\
+0 & \text{иначе}
+\end{cases},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+а 
+\begin_inset Formula $D_{N-1}$
+\end_inset
+
+расчитывается по формуле 
+\begin_inset Formula 
+\[
+D_{N-1}:=\begin{cases}
+\frac{\left(\left(2h_{N-2}+h_{N-3}\right)\varDelta_{N-2}-h_{N-2}\varDelta_{N-3}\right)}{h_{N-2}+h_{N-3}} & \text{если }\frac{\left(\left(2h_{N-2}+h_{N-3}\right)\varDelta_{N-2}-h_{N-2}\varDelta_{N-3}\right)}{h_{N-2}+h_{N-3}}\varDelta_{N-2}>0\\
+0 & \text{иначе}
+\end{cases}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Расчитываются окончательные коэффициенты кусочно кубического сплайна 
+\begin_inset Formula $\Pi_{1_{\text{i}}}$
+\end_inset
+
+,
+\begin_inset Formula $\Pi_{2_{\text{i}}}$
+\end_inset
+
+нумерация начинается с 0, длины 
+\begin_inset Formula $N-1$
+\end_inset
+
+, индекс последнего элемента массива 
+\begin_inset Formula $N-2$
+\end_inset
+
+ по следующим формулам:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Pi_{1_{i}}:=\frac{\left(\Delta_{i}-D_{i}\right)}{h_{i}},
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Pi_{2_{\text{i}}}:=\frac{\left(D_{i+1}-\varDelta_{i}\right)}{h_{i}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Интерполяция значений по коэффициентам
+\end_layout
+
+\begin_layout Standard
+Пусть необходимо найти значение функции при значении независимой переменной
+ t
+\end_layout
+
+\begin_layout Standard
+Если 
+\begin_inset Formula $t<T_{0}$
+\end_inset
+
+то выдается значение 
+\begin_inset Formula $Y_{0}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+Если 
+\begin_inset Formula $t>T_{N-1}$
+\end_inset
+
+то выдается значение 
+\begin_inset Formula $Y_{N-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+В противном случае находится такой индекс массива 
+\begin_inset Formula $j$
+\end_inset
+
+ что выполняются следующие условия:
+\begin_inset Formula $\left(T_{j}<t\right)$
+\end_inset
+
+и 
+\begin_inset Formula $\left(t>T_{j+1}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Тогда вычисляется 
+\begin_inset Formula $\theta$
+\end_inset
+
+ относительное значение переменной 
+\begin_inset Formula $t$
+\end_inset
+
+ по формуле:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta=t-T_{j}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+тогда выдается значение 
+\begin_inset Formula $y$
+\end_inset
+
+ вычисляемое по формуле 
+\begin_inset Formula 
+\[
+y:=T_{j}+\theta\cdot\left(D_{j}+\theta\cdot\left(2\Pi_{1_{j}}-\Pi_{2_{\text{j}}}+\theta\cdot\left(\left(\Pi_{2_{j}}-\Pi_{1_{j}}\right)/h_{j}\right)\right)\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Тестовый пример и значения
+\end_layout
+
+\begin_layout Standard
+Заданные точки 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T:=\left[0,0.25,0.35,0.5,0.8,1\right];\thinspace\thinspace Y:=\left[0,0.25,0.4,0.7,1,1\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename plot1.pdf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Результаты расчета коэффициентов полиномов Эрмита
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+D:=\left[0.642857,1.16667,1.73077,1.28571,0,0\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Pi_{1}=\left[1.42857,3.33333,1.79487,-0.952381,0.\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Pi_{2}=\left[0.666667,2.30769,-4.7619,-3.33333,0.\right]
+\]
+
+\end_inset
+
+
 \end_layout
 
 \end_body
