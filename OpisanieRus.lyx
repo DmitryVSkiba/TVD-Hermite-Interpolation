@@ -70,7 +70,7 @@
 \begin_body
 
 \begin_layout Section*
-Алгоритм расчета полинмов Эрмита с обеспечением монотонности 
+Алгоритм расчета полиномов Эрмита с обеспечением монотонности 
 \end_layout
 
 \begin_layout Standard
@@ -461,6 +461,7 @@ T:=\left[0,0.25,0.35,0.5,0.8,1\right];\thinspace\thinspace Y:=\left[0,0.25,0.4,0
 \begin_layout Standard
 \begin_inset Graphics
 	filename plot1.pdf
+	scale 80
 
 \end_inset
 
